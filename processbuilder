@@ -1,0 +1,36 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class GitPullAutomation {
+
+    public static void main(String[] args) {
+        try {
+            // Change this path to your local repo directory
+            String repoPath = "/home/ec2-user/javafiles";
+
+            // Command to execute
+            ProcessBuilder builder = new ProcessBuilder(
+                    "git", "-C", repoPath, "pull", "origin", "main"
+            );
+
+            builder.redirectErrorStream(true);
+            Process process = builder.start();
+
+            // Read output
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream())
+            );
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+
+            int exitCode = process.waitFor();
+            System.out.println("Process exited with code: " + exitCode);
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
